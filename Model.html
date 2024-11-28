@@ -1,0 +1,1373 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>1. Medianas de Errores &#8212; Final Deep Learning</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="_static/styles/sphinx-book-theme.css?v=384b581d" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css?v=13237357" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css?v=76b2166b" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css?v=4fa983c6" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.1e8bd061cd6da7fc9cf755528e8ffc24.min.css?v=0a3b3ea7" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+
+    <script src="_static/documentation_options.js?v=9eb32ce0"></script>
+    <script src="_static/doctools.js?v=888ff710"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="_static/copybutton.js?v=f281be69"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?v=efea14e4"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js?v=4a39c7ea"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="_static/design-tabs.js?v=36754332"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script async="async" src="_static/sphinx-thebe.js?v=c100c467"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"; const thebe_selector = ".thebe,.cell"; const thebe_selector_input = "pre"; const thebe_selector_output = ".output, .cell_output"</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'Model';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="&lt;no title&gt;" href="EDA.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>
+    Back to top
+  </button>
+
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+
+<a class="navbar-brand logo" href="intro.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Final Deep Learning - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Final Deep Learning - Home"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item">
+
+ <script>
+ document.write(`
+   <button class="btn navbar-btn search-button-field search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+    <span class="search-button__default-text">Search</span>
+    <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+   </button>
+ `);
+ </script></div>
+        <div class="sidebar-primary-item"><nav class="bd-links bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Examen Final Deep Learning
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#"><strong>1. Medianas de Errores</strong></a></li>
+
+
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2FModel.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/Model.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
+    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  </button>
+`);
+</script>
+
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>1. Medianas de Errores</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#"><strong>1. Medianas de Errores</strong></a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#observaciones-de-las-graficas"><strong>2. Observaciones de las Gráficas</strong></a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-de-los-resultados"><strong>Análisis de los resultados</strong></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluacion-general">1. <strong>Evaluación general</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mape-mean-absolute-percentage-error">2. <strong>MAPE (Mean Absolute Percentage Error)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rmse-root-mean-squared-error">3. <strong>RMSE (Root Mean Squared Error)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#r2-coeficiente-de-determinacion">4. <strong>R² (Coeficiente de determinación)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ljung-box-p-value-independencia-de-errores">5. <strong>Ljung-Box p-value (Independencia de errores)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#jarque-bera-p-value-normalidad-de-errores">6. <strong>Jarque-Bera p-value (Normalidad de errores)</strong></a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-final-y-recomendaciones"><strong>Interpretación final y recomendaciones</strong></a></li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">r2_score</span><span class="p">,</span> <span class="n">mean_absolute_percentage_error</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">statsmodels.graphics.tsaplots</span> <span class="kn">import</span> <span class="n">plot_pacf</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">MinMaxScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">Pipeline</span>
+<span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+<span class="kn">from</span> <span class="nn">statsmodels.stats.diagnostic</span> <span class="kn">import</span> <span class="n">acorr_ljungbox</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="kn">import</span> <span class="n">jarque_bera</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">GridSearchCV</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="kn">import</span> <span class="n">neighbors</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_absolute_error</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_log_error</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">explained_variance_score</span>
+<span class="kn">import</span> <span class="nn">mglearn</span>
+<span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Any</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">plotly.graph_objects</span> <span class="k">as</span> <span class="nn">go</span>
+
+<span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Dropout</span><span class="p">,</span> <span class="n">SimpleRNN</span><span class="p">,</span> <span class="n">LSTM</span>
+<span class="kn">from</span> <span class="nn">keras.optimizers</span> <span class="kn">import</span> <span class="n">Adam</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">KFold</span>
+
+
+<span class="n">sns</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Data</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">*</span> <span class="mi">25</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;time index&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_train</span> <span class="o">=</span> <span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="n">t</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_train</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="n">t</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_test</span> <span class="o">=</span> <span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="n">t</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_test</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="n">t</span><span class="p">:]</span>
+
+<span class="k">def</span> <span class="nf">calcular_metricas</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+    <span class="n">y_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">mape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span> <span class="o">/</span> <span class="n">y_true</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span>
+    <span class="n">ss_res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">ss_tot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y_true</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">r2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">ss_res</span> <span class="o">/</span> <span class="n">ss_tot</span><span class="p">)</span>
+    <span class="n">lb_test</span> <span class="o">=</span> <span class="n">acorr_ljungbox</span><span class="p">(</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">return_df</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ljung_box_p_value</span> <span class="o">=</span> <span class="n">lb_test</span><span class="p">[</span><span class="s1">&#39;lb_pvalue&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">jb_test</span> <span class="o">=</span> <span class="n">jarque_bera</span><span class="p">(</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">jarque_bera_p_value</span> <span class="o">=</span> <span class="n">jb_test</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;RMSE&#39;</span><span class="p">:</span> <span class="n">rmse</span><span class="p">,</span> <span class="s1">&#39;MAPE&#39;</span><span class="p">:</span> <span class="n">mape</span><span class="p">,</span> <span class="s1">&#39;R2&#39;</span><span class="p">:</span> <span class="n">r2</span><span class="p">,</span> <span class="s1">&#39;ljung-box&#39;</span><span class="p">:</span> <span class="n">ljung_box_p_value</span><span class="p">,</span> <span class="s1">&#39;Jarque-bera&#39;</span><span class="p">:</span> <span class="n">jarque_bera_p_value</span><span class="p">}</span>
+
+<span class="k">def</span> <span class="nf">return_of_df</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;mag_y&#39;</span>
+    <span class="n">data_frames</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+        <span class="n">temp_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;fisioterapia_dataset_regresion/s</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">/e</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">/u</span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2">/template_session.txt&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">temp_path</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">temp_file</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">temp_path</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+                <span class="n">data_frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp_file</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+                <span class="k">pass</span>
+    <span class="n">final_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">data_frames</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">Data</span><span class="p">(</span><span class="n">final_data</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span>
+
+<span class="c1"># Función para crear modelos</span>
+<span class="k">def</span> <span class="nf">create_model</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">neurons</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="p">,</span> <span class="n">model_type</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s1">&#39;MLP&#39;</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">neurons</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,)))</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout_rate</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s1">&#39;RNN&#39;</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">SimpleRNN</span><span class="p">(</span><span class="n">neurons</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;tanh&#39;</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">)))</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout_rate</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s1">&#39;LSTM&#39;</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="n">neurons</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;tanh&#39;</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">)))</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout_rate</span><span class="p">))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="n">Adam</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.001</span><span class="p">),</span> <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mae&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">model</span>
+
+<span class="c1"># Función de entrenamiento con historial (corregida)</span>
+<span class="k">def</span> <span class="nf">train_and_evaluate_with_history</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">neurons</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+    <span class="n">scaler_X</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">()</span>
+    <span class="n">scaler_y</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">()</span>
+
+    <span class="c1"># Escalar datos</span>
+    <span class="n">X_train</span> <span class="o">=</span> <span class="n">scaler_X</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">X_train</span><span class="p">)</span>
+    <span class="n">y_train</span> <span class="o">=</span> <span class="n">scaler_y</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">y_train</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">X_test</span> <span class="o">=</span> <span class="n">scaler_X</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">X_test</span><span class="p">)</span>
+    <span class="n">y_test</span> <span class="o">=</span> <span class="n">scaler_y</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">y_test</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="c1"># Ajustar la forma según el modelo</span>
+    <span class="k">if</span> <span class="n">model_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;RNN&#39;</span><span class="p">,</span> <span class="s1">&#39;LSTM&#39;</span><span class="p">]:</span>
+        <span class="c1"># Formato para modelos recurrentes</span>
+        <span class="n">X_train</span> <span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">X_test</span> <span class="o">=</span> <span class="n">X_test</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># Formato para MLP</span>
+        <span class="n">X_train</span> <span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">X_test</span> <span class="o">=</span> <span class="n">X_test</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="c1"># Crear el modelo</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">neurons</span><span class="o">=</span><span class="n">neurons</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="o">=</span><span class="n">dropout_rate</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="n">model_type</span><span class="p">)</span>
+
+    <span class="c1"># Entrenar el modelo</span>
+    <span class="n">history</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+        <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span>
+        <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">),</span>
+        <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Predicción y métricas</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">scaler_y</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">y_test</span> <span class="o">=</span> <span class="n">scaler_y</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">y_test</span><span class="p">)</span>
+
+    <span class="n">metrics</span> <span class="o">=</span> <span class="n">calcular_metricas</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">history</span>
+
+
+<span class="k">def</span> <span class="nf">k_fold_evaluation_and_plot</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">neurons</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+    <span class="n">kfold</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">k</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+    <span class="n">train_errors</span><span class="p">,</span> <span class="n">val_errors</span><span class="p">,</span> <span class="n">test_errors</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">train_idx</span><span class="p">,</span> <span class="n">val_idx</span> <span class="ow">in</span> <span class="n">kfold</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">X_train</span><span class="p">):</span>
+        <span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">X_train</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">X_train</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">val_idx</span><span class="p">]</span>
+        <span class="n">y_train</span><span class="p">,</span> <span class="n">y_val</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">y_train</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_idx</span><span class="p">],</span> <span class="n">data</span><span class="o">.</span><span class="n">y_train</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">val_idx</span><span class="p">]</span>
+
+        <span class="n">fold_data</span> <span class="o">=</span> <span class="n">Data</span><span class="p">(</span><span class="n">file</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">X_train</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">y_train</span><span class="p">),</span> <span class="n">t</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">val_idx</span><span class="p">),</span> <span class="n">target</span><span class="o">=</span><span class="n">data</span><span class="o">.</span><span class="n">y_train</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">fold_data</span><span class="o">.</span><span class="n">X_train</span><span class="p">,</span> <span class="n">fold_data</span><span class="o">.</span><span class="n">X_test</span> <span class="o">=</span> <span class="n">X_train</span><span class="p">,</span> <span class="n">X_val</span>
+        <span class="n">fold_data</span><span class="o">.</span><span class="n">y_train</span><span class="p">,</span> <span class="n">fold_data</span><span class="o">.</span><span class="n">y_test</span> <span class="o">=</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_val</span>
+
+        <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span><span class="p">,</span> <span class="n">history</span> <span class="o">=</span> <span class="n">train_and_evaluate_with_history</span><span class="p">(</span><span class="n">fold_data</span><span class="p">,</span> <span class="n">neurons</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span>
+
+        <span class="n">train_errors</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s1">&#39;loss&#39;</span><span class="p">])</span>
+        <span class="n">val_errors</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s1">&#39;val_loss&#39;</span><span class="p">])</span>
+        <span class="n">test_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;RMSE&#39;</span><span class="p">])</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s1">&#39;loss&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Train Loss&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">history</span><span class="o">.</span><span class="n">history</span><span class="p">[</span><span class="s1">&#39;val_loss&#39;</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Validation Loss&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Training vs Validation Loss&quot;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Epochs&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Loss&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="n">plt</span><span class="o">.</span><span class="n">boxplot</span><span class="p">([</span><span class="n">train_errors</span><span class="p">,</span> <span class="n">val_errors</span><span class="p">,</span> <span class="n">test_errors</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;Train&#39;</span><span class="p">,</span> <span class="s1">&#39;Validation&#39;</span><span class="p">,</span> <span class="s1">&#39;Test&#39;</span><span class="p">])</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Boxplots of Errors&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Error&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+    <span class="k">return</span> <span class="n">train_errors</span><span class="p">,</span> <span class="n">val_errors</span><span class="p">,</span> <span class="n">test_errors</span>
+
+<span class="k">def</span> <span class="nf">hyperparameter_search_with_plots</span><span class="p">(</span><span class="n">sujeto</span><span class="p">,</span> <span class="n">ejercicio</span><span class="p">,</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+    <span class="n">dropout_rates</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]</span>
+    <span class="n">neurons_options</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">]</span>
+    <span class="n">batch_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">dropout_rate</span> <span class="ow">in</span> <span class="n">dropout_rates</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">neurons</span> <span class="ow">in</span> <span class="n">neurons_options</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">batch_size</span> <span class="ow">in</span> <span class="n">batch_sizes</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">28</span><span class="p">]:</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">return_of_df</span><span class="p">(</span><span class="n">sujeto</span><span class="p">,</span> <span class="n">ejercicio</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+                    <span class="n">train_errors</span><span class="p">,</span> <span class="n">val_errors</span><span class="p">,</span> <span class="n">test_errors</span> <span class="o">=</span> <span class="n">k_fold_evaluation_and_plot</span><span class="p">(</span>
+                        <span class="n">data</span><span class="p">,</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">neurons</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">epochs</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span>
+                    <span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Train Errors Median: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">train_errors</span><span class="p">)</span><span class="si">}</span><span class="s2">, Validation Errors Median: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">val_errors</span><span class="p">)</span><span class="si">}</span><span class="s2">, Test Errors Median: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">test_errors</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Llamada de ejemplo</span>
+<span class="n">hyperparameter_search_with_plots</span><span class="p">(</span><span class="n">sujeto</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ejercicio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;MLP&#39;</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">hyperparameter_search_with_plots</span><span class="p">(</span><span class="n">sujeto</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ejercicio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;LSTM&#39;</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">hyperparameter_search_with_plots</span><span class="p">(</span><span class="n">sujeto</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ejercicio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;RNN&#39;</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ValueError</span><span class="g g-Whitespace">                                </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">line</span> <span class="mi">146</span>
+<span class="g g-Whitespace">    </span><span class="mi">143</span>                     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Train Errors Median: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">train_errors</span><span class="p">)</span><span class="si">}</span><span class="s2">, Validation Errors Median: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">val_errors</span><span class="p">)</span><span class="si">}</span><span class="s2">, Test Errors Median: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">test_errors</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">145</span> <span class="c1"># Llamada de ejemplo</span>
+<span class="ne">--&gt; </span><span class="mi">146</span> <span class="n">hyperparameter_search_with_plots</span><span class="p">(</span><span class="n">sujeto</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ejercicio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;MLP&#39;</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">147</span> <span class="n">hyperparameter_search_with_plots</span><span class="p">(</span><span class="n">sujeto</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ejercicio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;LSTM&#39;</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">148</span> <span class="n">hyperparameter_search_with_plots</span><span class="p">(</span><span class="n">sujeto</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ejercicio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;RNN&#39;</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+<span class="nn">Cell In [3], line 139,</span> in <span class="ni">hyperparameter_search_with_plots</span><span class="nt">(sujeto, ejercicio, model_type, epochs)</span>
+<span class="g g-Whitespace">    </span><span class="mi">137</span> <span class="k">for</span> <span class="n">batch_size</span> <span class="ow">in</span> <span class="n">batch_sizes</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">138</span>     <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">28</span><span class="p">]:</span>
+<span class="ne">--&gt; </span><span class="mi">139</span>         <span class="n">data</span> <span class="o">=</span> <span class="n">return_of_df</span><span class="p">(</span><span class="n">sujeto</span><span class="p">,</span> <span class="n">ejercicio</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">140</span>         <span class="n">train_errors</span><span class="p">,</span> <span class="n">val_errors</span><span class="p">,</span> <span class="n">test_errors</span> <span class="o">=</span> <span class="n">k_fold_evaluation_and_plot</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">141</span>             <span class="n">data</span><span class="p">,</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">neurons</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">epochs</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span>
+<span class="g g-Whitespace">    </span><span class="mi">142</span>         <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">143</span>         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Train Errors Median: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">train_errors</span><span class="p">)</span><span class="si">}</span><span class="s2">, Validation Errors Median: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">val_errors</span><span class="p">)</span><span class="si">}</span><span class="s2">, Test Errors Median: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">median</span><span class="p">(</span><span class="n">test_errors</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="nn">Cell In [3], line 35,</span> in <span class="ni">return_of_df</span><span class="nt">(s, e, t)</span>
+<span class="g g-Whitespace">     </span><span class="mi">33</span>         <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+<span class="g g-Whitespace">     </span><span class="mi">34</span>             <span class="k">pass</span>
+<span class="ne">---&gt; </span><span class="mi">35</span> <span class="n">final_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">data_frames</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">36</span> <span class="n">data</span> <span class="o">=</span> <span class="n">Data</span><span class="p">(</span><span class="n">final_data</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+<span class="g g-Whitespace">     </span><span class="mi">37</span> <span class="k">return</span> <span class="n">data</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\pandas\core\reshape\concat.py:380,</span> in <span class="ni">concat</span><span class="nt">(objs, axis, join, ignore_index, keys, levels, names, verify_integrity, sort, copy)</span>
+<span class="g g-Whitespace">    </span><span class="mi">377</span> <span class="k">elif</span> <span class="n">copy</span> <span class="ow">and</span> <span class="n">using_copy_on_write</span><span class="p">():</span>
+<span class="g g-Whitespace">    </span><span class="mi">378</span>     <span class="n">copy</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="ne">--&gt; </span><span class="mi">380</span> <span class="n">op</span> <span class="o">=</span> <span class="n">_Concatenator</span><span class="p">(</span>
+<span class="g g-Whitespace">    </span><span class="mi">381</span>     <span class="n">objs</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">382</span>     <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">383</span>     <span class="n">ignore_index</span><span class="o">=</span><span class="n">ignore_index</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">384</span>     <span class="n">join</span><span class="o">=</span><span class="n">join</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">385</span>     <span class="n">keys</span><span class="o">=</span><span class="n">keys</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">386</span>     <span class="n">levels</span><span class="o">=</span><span class="n">levels</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">387</span>     <span class="n">names</span><span class="o">=</span><span class="n">names</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">388</span>     <span class="n">verify_integrity</span><span class="o">=</span><span class="n">verify_integrity</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">389</span>     <span class="n">copy</span><span class="o">=</span><span class="n">copy</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">390</span>     <span class="n">sort</span><span class="o">=</span><span class="n">sort</span><span class="p">,</span>
+<span class="g g-Whitespace">    </span><span class="mi">391</span> <span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">393</span> <span class="k">return</span> <span class="n">op</span><span class="o">.</span><span class="n">get_result</span><span class="p">()</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\pandas\core\reshape\concat.py:443,</span> in <span class="ni">_Concatenator.__init__</span><span class="nt">(self, objs, axis, join, keys, levels, names, ignore_index, verify_integrity, copy, sort)</span>
+<span class="g g-Whitespace">    </span><span class="mi">440</span> <span class="bp">self</span><span class="o">.</span><span class="n">verify_integrity</span> <span class="o">=</span> <span class="n">verify_integrity</span>
+<span class="g g-Whitespace">    </span><span class="mi">441</span> <span class="bp">self</span><span class="o">.</span><span class="n">copy</span> <span class="o">=</span> <span class="n">copy</span>
+<span class="ne">--&gt; </span><span class="mi">443</span> <span class="n">objs</span><span class="p">,</span> <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_clean_keys_and_objs</span><span class="p">(</span><span class="n">objs</span><span class="p">,</span> <span class="n">keys</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">445</span> <span class="c1"># figure out what our result ndim is going to be</span>
+<span class="g g-Whitespace">    </span><span class="mi">446</span> <span class="n">ndims</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_ndims</span><span class="p">(</span><span class="n">objs</span><span class="p">)</span>
+
+<span class="nn">File ~\AppData\Local\Programs\Python\Python310\lib\site-packages\pandas\core\reshape\concat.py:505,</span> in <span class="ni">_Concatenator._clean_keys_and_objs</span><span class="nt">(self, objs, keys)</span>
+<span class="g g-Whitespace">    </span><span class="mi">502</span>     <span class="n">objs_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">objs</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">504</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">objs_list</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+<span class="ne">--&gt; </span><span class="mi">505</span>     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No objects to concatenate&quot;</span><span class="p">)</span>
+<span class="g g-Whitespace">    </span><span class="mi">507</span> <span class="k">if</span> <span class="n">keys</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">508</span>     <span class="n">objs_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">com</span><span class="o">.</span><span class="n">not_none</span><span class="p">(</span><span class="o">*</span><span class="n">objs_list</span><span class="p">))</span>
+
+<span class="ne">ValueError</span>: No objects to concatenate
+</pre></div>
+</div>
+</div>
+</div>
+<p>Con base en los valores proporcionados y las gráficas observadas, aquí tienes una interpretación de los resultados:</p>
+<section id="medianas-de-errores">
+<h1><strong>1. Medianas de Errores</strong><a class="headerlink" href="#medianas-de-errores" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p><strong>Train Errors Median (0.0165):</strong></p>
+<ul>
+<li><p>La mediana del error durante el entrenamiento es baja, lo que indica que el modelo se ajusta bastante bien a los datos de entrenamiento.</p></li>
+<li><p>Esto sugiere que el modelo tiene suficiente capacidad para aprender las características de los datos de entrenamiento.</p></li>
+</ul>
+</li>
+<li><p><strong>Validation Errors Median (0.0023):</strong></p>
+<ul>
+<li><p>La mediana del error en el conjunto de validación es incluso menor que en el conjunto de entrenamiento.</p></li>
+<li><p>Esto puede indicar que el modelo generaliza bien a los datos que no ha visto antes, lo cual es una buena señal de un modelo bien entrenado y equilibrado.</p></li>
+</ul>
+</li>
+<li><p><strong>Test Errors Median (0.0739):</strong></p>
+<ul>
+<li><p>Sin embargo, la mediana del error en el conjunto de prueba es significativamente más alta. Esto podría deberse a:</p>
+<ul>
+<li><p>Un posible <strong>cambio en la distribución de los datos de prueba</strong> con respecto a los de entrenamiento y validación.</p></li>
+<li><p><strong>Subajuste en los datos de prueba</strong> (el modelo no logra capturar ciertos patrones presentes en ellos).</p></li>
+<li><p>Un tamaño limitado de datos de prueba, que hace que los errores sean más sensibles a ciertas predicciones.</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<hr class="docutils" />
+</section>
+<section id="observaciones-de-las-graficas">
+<h1><strong>2. Observaciones de las Gráficas</strong><a class="headerlink" href="#observaciones-de-las-graficas" title="Link to this heading">#</a></h1>
+<ul class="simple">
+<li><p><strong>Training vs Validation Loss:</strong></p>
+<ul>
+<li><p>La curva de pérdida de entrenamiento desciende rápidamente y se estabiliza, lo que indica que el modelo está aprendiendo de manera eficiente.</p></li>
+<li><p>La pérdida de validación también es consistente y más baja que la de entrenamiento, mostrando que no hay problemas de sobreajuste.</p></li>
+</ul>
+</li>
+<li><p><strong>Boxplots de Errores:</strong></p>
+<ul>
+<li><p>Los boxplots de entrenamiento y validación muestran distribuciones similares, con errores bajos y algunas observaciones atípicas.</p></li>
+<li><p>El boxplot de prueba tiene una distribución más dispersa y valores más altos, lo que refuerza la idea de una brecha en el rendimiento entre los datos de prueba y los otros conjuntos.</p></li>
+</ul>
+</li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">Dropout</span><span class="p">,</span> <span class="n">SimpleRNN</span><span class="p">,</span> <span class="n">LSTM</span><span class="p">,</span> <span class="n">Input</span>
+<span class="kn">from</span> <span class="nn">keras.optimizers</span> <span class="kn">import</span> <span class="n">Adam</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">MinMaxScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">mean_squared_error</span><span class="p">,</span> <span class="n">mean_absolute_percentage_error</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># Clase Data</span>
+<span class="k">class</span> <span class="nc">Data</span><span class="p">():</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">file</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">*</span> <span class="mi">25</span>
+        <span class="n">file</span> <span class="o">=</span> <span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;time index&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_train</span> <span class="o">=</span> <span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="n">t</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_train</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="n">t</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">X_test</span> <span class="o">=</span> <span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s1">&#39;columns&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="n">t</span><span class="p">:]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_test</span> <span class="o">=</span> <span class="n">file</span><span class="p">[</span><span class="n">target</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="o">-</span><span class="n">t</span><span class="p">:]</span>
+
+<span class="c1"># Función de cálculo de métricas</span>
+<span class="k">def</span> <span class="nf">calcular_metricas</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">):</span>
+    <span class="n">y_true</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_true</span><span class="p">)</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">rmse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">((</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">mape</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">((</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span> <span class="o">/</span> <span class="n">y_true</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span>
+    <span class="n">ss_res</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">ss_tot</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y_true</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">r2</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="n">ss_res</span> <span class="o">/</span> <span class="n">ss_tot</span><span class="p">)</span>
+    <span class="n">lb_test</span> <span class="o">=</span> <span class="n">acorr_ljungbox</span><span class="p">(</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">lags</span><span class="o">=</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">return_df</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">ljung_box_p_value</span> <span class="o">=</span> <span class="n">lb_test</span><span class="p">[</span><span class="s1">&#39;lb_pvalue&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">jb_test</span> <span class="o">=</span> <span class="n">jarque_bera</span><span class="p">(</span><span class="n">y_true</span> <span class="o">-</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">jarque_bera_p_value</span> <span class="o">=</span> <span class="n">jb_test</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;RMSE&#39;</span><span class="p">:</span> <span class="n">rmse</span><span class="p">,</span> <span class="s1">&#39;MAPE&#39;</span><span class="p">:</span> <span class="n">mape</span><span class="p">,</span> <span class="s1">&#39;R2&#39;</span><span class="p">:</span> <span class="n">r2</span><span class="p">,</span> <span class="s1">&#39;ljung-box&#39;</span><span class="p">:</span> <span class="n">ljung_box_p_value</span><span class="p">,</span> <span class="s1">&#39;Jarque-bera&#39;</span><span class="p">:</span> <span class="n">jarque_bera_p_value</span><span class="p">}</span>
+
+<span class="c1"># Función para cargar y preparar el dataset</span>
+<span class="k">def</span> <span class="nf">return_of_df</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="s1">&#39;mag_y&#39;</span>
+    <span class="n">data_frames</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">):</span>
+        <span class="n">temp_path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;fisioterapia_dataset_regresion/s</span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">/e</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">/u</span><span class="si">{</span><span class="n">u</span><span class="si">}</span><span class="s2">/template_session.txt&quot;</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">temp_path</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">temp_file</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">temp_path</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">)</span>
+                <span class="n">data_frames</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">temp_file</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">ex</span><span class="p">:</span>
+                <span class="k">pass</span>
+    <span class="n">final_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">data_frames</span><span class="p">,</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">Data</span><span class="p">(</span><span class="n">final_data</span><span class="p">,</span> <span class="n">t</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span>
+
+<span class="k">def</span> <span class="nf">create_model</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,</span> <span class="n">neurons</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="p">,</span> <span class="n">model_type</span><span class="p">):</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s1">&#39;MLP&#39;</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">neurons</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="n">input_dim</span><span class="p">,)))</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout_rate</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s1">&#39;RNN&#39;</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">SimpleRNN</span><span class="p">(</span><span class="n">neurons</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;tanh&#39;</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">)))</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout_rate</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">model_type</span> <span class="o">==</span> <span class="s1">&#39;LSTM&#39;</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">LSTM</span><span class="p">(</span><span class="n">neurons</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;tanh&#39;</span><span class="p">,</span> <span class="n">input_shape</span><span class="o">=</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="n">input_dim</span><span class="p">)))</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="n">dropout_rate</span><span class="p">))</span>
+
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s1">&#39;linear&#39;</span><span class="p">))</span>  <span class="c1"># Capa de salida para regresión</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">optimizer</span><span class="o">=</span><span class="n">Adam</span><span class="p">(</span><span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.001</span><span class="p">),</span> <span class="n">loss</span><span class="o">=</span><span class="s1">&#39;mse&#39;</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;mae&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">model</span>
+
+<span class="c1"># Función de entrenamiento y evaluación</span>
+<span class="k">def</span> <span class="nf">train_and_evaluate</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">neurons</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+    <span class="n">scaler_X</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">()</span>
+    <span class="n">scaler_y</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">()</span>
+
+    <span class="c1"># Escalar datos</span>
+    <span class="n">X_train</span> <span class="o">=</span> <span class="n">scaler_X</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">X_train</span><span class="p">)</span>
+    <span class="n">y_train</span> <span class="o">=</span> <span class="n">scaler_y</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">y_train</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="n">X_test</span> <span class="o">=</span> <span class="n">scaler_X</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">X_test</span><span class="p">)</span>
+    <span class="n">y_test</span> <span class="o">=</span> <span class="n">scaler_y</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">y_test</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+    <span class="k">if</span> <span class="n">model_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;RNN&#39;</span><span class="p">,</span> <span class="s1">&#39;LSTM&#39;</span><span class="p">]:</span>
+        <span class="n">X_train</span> <span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">X_test</span> <span class="o">=</span> <span class="n">X_test</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+    <span class="c1"># Crear el modelo</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">create_model</span><span class="p">(</span><span class="n">input_dim</span><span class="o">=</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">neurons</span><span class="o">=</span><span class="n">neurons</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="o">=</span><span class="n">dropout_rate</span><span class="p">,</span> <span class="n">model_type</span><span class="o">=</span><span class="n">model_type</span><span class="p">)</span>
+
+    <span class="c1"># Entrenar el modelo</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+        <span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span>
+        <span class="n">validation_data</span><span class="o">=</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">),</span>
+        <span class="n">epochs</span><span class="o">=</span><span class="n">epochs</span><span class="p">,</span>
+        <span class="n">batch_size</span><span class="o">=</span><span class="n">batch_size</span><span class="p">,</span>
+        <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Evaluar el modelo</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">scaler_y</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">y_test</span> <span class="o">=</span> <span class="n">scaler_y</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">y_test</span><span class="p">)</span>
+
+    <span class="n">metrics</span> <span class="o">=</span> <span class="n">calcular_metricas</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span>
+
+<span class="c1"># Búsqueda de hiperparámetros</span>
+<span class="k">def</span> <span class="nf">hyperparameter_search_dl</span><span class="p">(</span><span class="n">sujeto</span><span class="p">,</span> <span class="n">ejercicio</span><span class="p">,</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+    <span class="n">best_rmse</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;inf&#39;</span><span class="p">)</span>
+    <span class="n">best_model</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">best_params</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">dropout_rates</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">]</span>
+    <span class="n">neurons_options</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">]</span>
+    <span class="n">batch_sizes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">dropout_rate</span> <span class="ow">in</span> <span class="n">dropout_rates</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">neurons</span> <span class="ow">in</span> <span class="n">neurons_options</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">batch_size</span> <span class="ow">in</span> <span class="n">batch_sizes</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">28</span><span class="p">]:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Probando: Dropout=</span><span class="si">{</span><span class="n">dropout_rate</span><span class="si">}</span><span class="s2">, Neurons=</span><span class="si">{</span><span class="n">neurons</span><span class="si">}</span><span class="s2">, Batch_size=</span><span class="si">{</span><span class="n">batch_size</span><span class="si">}</span><span class="s2">, t=</span><span class="si">{</span><span class="n">t</span><span class="si">}</span><span class="s2">, Model=</span><span class="si">{</span><span class="n">model_type</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">return_of_df</span><span class="p">(</span><span class="n">sujeto</span><span class="p">,</span> <span class="n">ejercicio</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+                    <span class="n">model</span><span class="p">,</span> <span class="n">metrics</span> <span class="o">=</span> <span class="n">train_and_evaluate</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">neurons</span><span class="p">,</span> <span class="n">dropout_rate</span><span class="p">,</span> <span class="n">batch_size</span><span class="p">,</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Resultados: </span><span class="si">{</span><span class="n">metrics</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;RMSE&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">best_rmse</span><span class="p">:</span>
+                        <span class="n">best_rmse</span> <span class="o">=</span> <span class="n">metrics</span><span class="p">[</span><span class="s1">&#39;RMSE&#39;</span><span class="p">]</span>
+                        <span class="n">best_model</span> <span class="o">=</span> <span class="n">model</span>
+                        <span class="n">best_params</span> <span class="o">=</span> <span class="p">{</span>
+                            <span class="s1">&#39;Model&#39;</span><span class="p">:</span> <span class="n">model_type</span><span class="p">,</span>
+                            <span class="s1">&#39;Dropout&#39;</span><span class="p">:</span> <span class="n">dropout_rate</span><span class="p">,</span>
+                            <span class="s1">&#39;Neurons&#39;</span><span class="p">:</span> <span class="n">neurons</span><span class="p">,</span>
+                            <span class="s1">&#39;Batch_size&#39;</span><span class="p">:</span> <span class="n">batch_size</span><span class="p">,</span>
+                            <span class="s1">&#39;t&#39;</span><span class="p">:</span> <span class="n">t</span><span class="p">,</span>
+                            <span class="o">**</span><span class="n">metrics</span>
+                        <span class="p">}</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Mejores hiperparámetros: </span><span class="si">{</span><span class="n">best_params</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">best_model</span><span class="p">,</span> <span class="n">best_params</span>
+
+<span class="c1"># Función general para entrenamiento</span>
+<span class="k">def</span> <span class="nf">training</span><span class="p">(</span><span class="n">model_type</span><span class="p">,</span> <span class="n">sujeto</span><span class="p">,</span> <span class="n">ejercicio</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">model_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;MLP&#39;</span><span class="p">,</span> <span class="s1">&#39;RNN&#39;</span><span class="p">,</span> <span class="s1">&#39;LSTM&#39;</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">hyperparameter_search_dl</span><span class="p">(</span><span class="n">sujeto</span><span class="p">,</span> <span class="n">ejercicio</span><span class="p">,</span> <span class="n">model_type</span><span class="p">,</span> <span class="n">epochs</span><span class="p">)</span>
+
+<span class="n">best_model</span><span class="p">,</span> <span class="n">best_params</span> <span class="o">=</span> <span class="n">training</span><span class="p">(</span><span class="s1">&#39;MLP&#39;</span><span class="p">,</span> <span class="n">sujeto</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ejercicio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+<span class="n">best_model_lstm</span><span class="p">,</span> <span class="n">best_params_lstm</span> <span class="o">=</span> <span class="n">training</span><span class="p">(</span><span class="s1">&#39;LSTM&#39;</span><span class="p">,</span> <span class="n">sujeto</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ejercicio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+<span class="n">best_model_rnn</span><span class="p">,</span> <span class="n">best_params_rnn</span> <span class="o">=</span> <span class="n">training</span><span class="p">(</span><span class="s1">&#39;RNN&#39;</span><span class="p">,</span> <span class="n">sujeto</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ejercicio</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Modelo seleccionado: </span><span class="si">{</span><span class="n">best_params</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Modelo seleccionado: </span><span class="si">{</span><span class="n">best_params_lstm</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Modelo seleccionado: </span><span class="si">{</span><span class="n">best_params_rnn</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Probando: Dropout=0.2, Neurons=10, Batch_size=16, t=7, Model=MLP
+6/6 [==============================] - 0s 0s/step
+Resultados: {&#39;RMSE&#39;: 0.08632608813748671, &#39;MAPE&#39;: 1225.2260172240346, &#39;R2&#39;: 0.9771154920226627, &#39;ljung-box&#39;: 0.13544080755359256, &#39;Jarque-bera&#39;: 0.0002897280493032728}
+Probando: Dropout=0.2, Neurons=10, Batch_size=16, t=14, Model=MLP
+11/11 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.08115873303363949, &#39;MAPE&#39;: 116.10305871359353, &#39;R2&#39;: 0.9797230303099537, &#39;ljung-box&#39;: 0.006031376502060756, &#39;Jarque-bera&#39;: 2.038228921197316e-07}
+Probando: Dropout=0.2, Neurons=10, Batch_size=16, t=21, Model=MLP
+17/17 [==============================] - 0s 1ms/step
+Resultados: {&#39;RMSE&#39;: 0.07765049731343492, &#39;MAPE&#39;: 1039.3859968612578, &#39;R2&#39;: 0.9817783564906699, &#39;ljung-box&#39;: 1.5272950892879165e-05, &#39;Jarque-bera&#39;: 1.70112812725165e-11}
+Probando: Dropout=0.2, Neurons=10, Batch_size=16, t=28, Model=MLP
+22/22 [==============================] - 0s 1ms/step
+Resultados: {&#39;RMSE&#39;: 0.048315184217587376, &#39;MAPE&#39;: 1699.9219645267963, &#39;R2&#39;: 0.9932076366134458, &#39;ljung-box&#39;: 1.701585850695102e-06, &#39;Jarque-bera&#39;: 7.771561172376096e-16}
+Probando: Dropout=0.2, Neurons=10, Batch_size=32, t=7, Model=MLP
+6/6 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.08168561195512564, &#39;MAPE&#39;: 1010.76983614861, &#39;R2&#39;: 0.979509687086962, &#39;ljung-box&#39;: 0.1258036341060379, &#39;Jarque-bera&#39;: 0.00063000541216085}
+Probando: Dropout=0.2, Neurons=10, Batch_size=32, t=14, Model=MLP
+11/11 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.059860751674384184, &#39;MAPE&#39;: 3772.054438105518, &#39;R2&#39;: 0.9889689496556785, &#39;ljung-box&#39;: 0.005801458050380783, &#39;Jarque-bera&#39;: 3.768847411933507e-08}
+Probando: Dropout=0.2, Neurons=10, Batch_size=32, t=21, Model=MLP
+17/17 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.05896901783681058, &#39;MAPE&#39;: 807.8615762506784, &#39;R2&#39;: 0.9894913518421914, &#39;ljung-box&#39;: 4.754394384838267e-05, &#39;Jarque-bera&#39;: 4.6535386655222055e-10}
+Probando: Dropout=0.2, Neurons=10, Batch_size=32, t=28, Model=MLP
+22/22 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.05448879486578608, &#39;MAPE&#39;: 952.285721973084, &#39;R2&#39;: 0.9913609092101757, &#39;ljung-box&#39;: 1.1608717717105763e-05, &#39;Jarque-bera&#39;: 6.661338147750939e-16}
+Probando: Dropout=0.8, Neurons=10, Batch_size=16, t=7, Model=MLP
+6/6 [==============================] - 0s 4ms/step
+Resultados: {&#39;RMSE&#39;: 0.45258534266835043, &#39;MAPE&#39;: 3351.798363016919, &#39;R2&#39;: 0.37098873034630553, &#39;ljung-box&#39;: 0.08663785108327299, &#39;Jarque-bera&#39;: 0.0003133338061765967}
+Probando: Dropout=0.8, Neurons=10, Batch_size=16, t=14, Model=MLP
+11/11 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.42414963079433243, &#39;MAPE&#39;: 7621.523223342459, &#39;R2&#39;: 0.44617733991419073, &#39;ljung-box&#39;: 0.003912348876548597, &#39;Jarque-bera&#39;: 2.7509139299830565e-08}
+Probando: Dropout=0.8, Neurons=10, Batch_size=16, t=21, Model=MLP
+17/17 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.3759890993805232, &#39;MAPE&#39;: 805.694389662848, &#39;R2&#39;: 0.5727819720476863, &#39;ljung-box&#39;: 7.375053813709776e-06, &#39;Jarque-bera&#39;: 4.601874437071274e-13}
+Probando: Dropout=0.8, Neurons=10, Batch_size=16, t=28, Model=MLP
+22/22 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.4006602537593227, &#39;MAPE&#39;: 11295.54060137408, &#39;R2&#39;: 0.5329039913297571, &#39;ljung-box&#39;: 3.4009544954184e-08, &#39;Jarque-bera&#39;: 0.0}
+Probando: Dropout=0.8, Neurons=10, Batch_size=32, t=7, Model=MLP
+6/6 [==============================] - 0s 3ms/step
+Resultados: {&#39;RMSE&#39;: 0.3766162011913983, &#39;MAPE&#39;: 15957.181075700231, &#39;R2&#39;: 0.5644325136123095, &#39;ljung-box&#39;: 0.04609403565518032, &#39;Jarque-bera&#39;: 4.880420710418054e-05}
+Probando: Dropout=0.8, Neurons=10, Batch_size=32, t=14, Model=MLP
+11/11 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.34567475984070606, &#39;MAPE&#39;: 5418.453231842295, &#39;R2&#39;: 0.6321524445654112, &#39;ljung-box&#39;: 0.005014716424813034, &#39;Jarque-bera&#39;: 1.4072668585995984e-09}
+Probando: Dropout=0.8, Neurons=10, Batch_size=32, t=21, Model=MLP
+17/17 [==============================] - 0s 1ms/step
+Resultados: {&#39;RMSE&#39;: 0.4109317307449153, &#39;MAPE&#39;: 15522.318169878694, &#39;R2&#39;: 0.48968490207188886, &#39;ljung-box&#39;: 4.152872769542584e-06, &#39;Jarque-bera&#39;: 1.9884094371036554e-13}
+Probando: Dropout=0.8, Neurons=10, Batch_size=32, t=28, Model=MLP
+22/22 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.3756023107792747, &#39;MAPE&#39;: 7940.472019494192, &#39;R2&#39;: 0.5895028524107735, &#39;ljung-box&#39;: 1.3330461409892649e-08, &#39;Jarque-bera&#39;: 0.0}
+Mejores hiperparámetros: {&#39;Model&#39;: &#39;MLP&#39;, &#39;Dropout&#39;: 0.2, &#39;Neurons&#39;: 10, &#39;Batch_size&#39;: 16, &#39;t&#39;: 28, &#39;RMSE&#39;: 0.048315184217587376, &#39;MAPE&#39;: 1699.9219645267963, &#39;R2&#39;: 0.9932076366134458, &#39;ljung-box&#39;: 1.701585850695102e-06, &#39;Jarque-bera&#39;: 7.771561172376096e-16}
+Probando: Dropout=0.2, Neurons=10, Batch_size=16, t=7, Model=LSTM
+6/6 [==============================] - 0s 0s/step
+Resultados: {&#39;RMSE&#39;: 0.05859485279632063, &#39;MAPE&#39;: 838.9787326659123, &#39;R2&#39;: 0.9894567041822967, &#39;ljung-box&#39;: 0.17342554581632183, &#39;Jarque-bera&#39;: 2.5311974738428944e-10}
+Probando: Dropout=0.2, Neurons=10, Batch_size=16, t=14, Model=LSTM
+11/11 [==============================] - 1s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.05314658871070003, &#39;MAPE&#39;: 1989.701678374454, &#39;R2&#39;: 0.9913047249831046, &#39;ljung-box&#39;: 0.005592229146295011, &#39;Jarque-bera&#39;: 0.0}
+Probando: Dropout=0.2, Neurons=10, Batch_size=16, t=21, Model=LSTM
+17/17 [==============================] - 0s 1ms/step
+Resultados: {&#39;RMSE&#39;: 0.05809564964860554, &#39;MAPE&#39;: 1134.9703346974968, &#39;R2&#39;: 0.9898003260786314, &#39;ljung-box&#39;: 0.006886106697918896, &#39;Jarque-bera&#39;: 0.0}
+Probando: Dropout=0.2, Neurons=10, Batch_size=16, t=28, Model=LSTM
+22/22 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.052858315765487794, &#39;MAPE&#39;: 320.2646278386771, &#39;R2&#39;: 0.9918701922675677, &#39;ljung-box&#39;: 0.0015144745149682814, &#39;Jarque-bera&#39;: 0.0}
+Probando: Dropout=0.2, Neurons=10, Batch_size=32, t=7, Model=LSTM
+6/6 [==============================] - 0s 167us/step
+Resultados: {&#39;RMSE&#39;: 0.05868549399583974, &#39;MAPE&#39;: 552.7983049856072, &#39;R2&#39;: 0.9894240598084737, &#39;ljung-box&#39;: 0.19790434084357925, &#39;Jarque-bera&#39;: 1.2935097437605236e-11}
+Probando: Dropout=0.2, Neurons=10, Batch_size=32, t=14, Model=LSTM
+11/11 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.0797622180987057, &#39;MAPE&#39;: 2372.6374703458896, &#39;R2&#39;: 0.9804148464822083, &#39;ljung-box&#39;: 0.0010900526765245, &#39;Jarque-bera&#39;: 0.0}
+Probando: Dropout=0.2, Neurons=10, Batch_size=32, t=21, Model=LSTM
+17/17 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.06110516084396063, &#39;MAPE&#39;: 254.966940062996, &#39;R2&#39;: 0.9887162138721834, &#39;ljung-box&#39;: 0.009665395956870201, &#39;Jarque-bera&#39;: 0.0}
+Probando: Dropout=0.2, Neurons=10, Batch_size=32, t=28, Model=LSTM
+22/22 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.057461294599373096, &#39;MAPE&#39;: 511.17941914863627, &#39;R2&#39;: 0.9903926315721647, &#39;ljung-box&#39;: 0.0018719006212571687, &#39;Jarque-bera&#39;: 0.0}
+Probando: Dropout=0.8, Neurons=10, Batch_size=16, t=7, Model=LSTM
+6/6 [==============================] - 0s 3ms/step
+Resultados: {&#39;RMSE&#39;: 0.18923490455884676, &#39;MAPE&#39;: 290.2815869700922, &#39;R2&#39;: 0.8900336151724518, &#39;ljung-box&#39;: 0.10317984658276472, &#39;Jarque-bera&#39;: 0.00021876987718350005}
+Probando: Dropout=0.8, Neurons=10, Batch_size=16, t=14, Model=LSTM
+11/11 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.2000675350286703, &#39;MAPE&#39;: 333.17569932359316, &#39;R2&#39;: 0.8767787025402397, &#39;ljung-box&#39;: 0.0069991040211919995, &#39;Jarque-bera&#39;: 9.593181027334197e-09}
+Probando: Dropout=0.8, Neurons=10, Batch_size=16, t=21, Model=LSTM
+17/17 [==============================] - 0s 1ms/step
+Resultados: {&#39;RMSE&#39;: 0.20951919860467677, &#39;MAPE&#39;: 1356.3858065121665, &#39;R2&#39;: 0.8673379477919203, &#39;ljung-box&#39;: 2.1186566913594126e-05, &#39;Jarque-bera&#39;: 8.134604101428522e-13}
+Probando: Dropout=0.8, Neurons=10, Batch_size=16, t=28, Model=LSTM
+22/22 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.1937302849775919, &#39;MAPE&#39;: 191.44789138937003, &#39;R2&#39;: 0.8907934550071275, &#39;ljung-box&#39;: 2.3982193487611864e-07, &#39;Jarque-bera&#39;: 0.0}
+Probando: Dropout=0.8, Neurons=10, Batch_size=32, t=7, Model=LSTM
+6/6 [==============================] - 0s 3ms/step
+Resultados: {&#39;RMSE&#39;: 0.20685660045534596, &#39;MAPE&#39;: 419.35000491791186, &#39;R2&#39;: 0.8685997404915727, &#39;ljung-box&#39;: 0.0915092214607477, &#39;Jarque-bera&#39;: 6.858480570148817e-05}
+Probando: Dropout=0.8, Neurons=10, Batch_size=32, t=14, Model=LSTM
+11/11 [==============================] - 0s 1ms/step
+Resultados: {&#39;RMSE&#39;: 0.1946646599086555, &#39;MAPE&#39;: 3299.177368626627, &#39;R2&#39;: 0.8833440847458887, &#39;ljung-box&#39;: 0.007666242538729899, &#39;Jarque-bera&#39;: 7.509276978012736e-09}
+Probando: Dropout=0.8, Neurons=10, Batch_size=32, t=21, Model=LSTM
+17/17 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.19350369917282603, &#39;MAPE&#39;: 1760.8930436366468, &#39;R2&#39;: 0.8868439949773088, &#39;ljung-box&#39;: 3.6239191556574784e-05, &#39;Jarque-bera&#39;: 8.674172491396348e-13}
+Probando: Dropout=0.8, Neurons=10, Batch_size=32, t=28, Model=LSTM
+22/22 [==============================] - 0s 3ms/step
+Resultados: {&#39;RMSE&#39;: 0.18800897312676187, &#39;MAPE&#39;: 674.0205464741452, &#39;R2&#39;: 0.8971484626667559, &#39;ljung-box&#39;: 5.217847974502932e-07, &#39;Jarque-bera&#39;: 4.440892098500626e-16}
+Mejores hiperparámetros: {&#39;Model&#39;: &#39;LSTM&#39;, &#39;Dropout&#39;: 0.2, &#39;Neurons&#39;: 10, &#39;Batch_size&#39;: 16, &#39;t&#39;: 28, &#39;RMSE&#39;: 0.052858315765487794, &#39;MAPE&#39;: 320.2646278386771, &#39;R2&#39;: 0.9918701922675677, &#39;ljung-box&#39;: 0.0015144745149682814, &#39;Jarque-bera&#39;: 0.0}
+Probando: Dropout=0.2, Neurons=10, Batch_size=16, t=7, Model=RNN
+6/6 [==============================] - 0s 3ms/step
+Resultados: {&#39;RMSE&#39;: 0.13276023460620917, &#39;MAPE&#39;: 4020.8836471309937, &#39;R2&#39;: 0.9458755521203907, &#39;ljung-box&#39;: 0.08351972869945375, &#39;Jarque-bera&#39;: 0.00041933747807776367}
+Probando: Dropout=0.2, Neurons=10, Batch_size=16, t=14, Model=RNN
+11/11 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.12167852929297392, &#39;MAPE&#39;: 4418.776552771231, &#39;R2&#39;: 0.9544214569711044, &#39;ljung-box&#39;: 0.0006169318470977173, &#39;Jarque-bera&#39;: 9.55735490748566e-12}
+Probando: Dropout=0.2, Neurons=10, Batch_size=16, t=21, Model=RNN
+17/17 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.12699599473758852, &#39;MAPE&#39;: 569.8515574489869, &#39;R2&#39;: 0.9512607197955556, &#39;ljung-box&#39;: 0.00013061756815241048, &#39;Jarque-bera&#39;: 4.859775756371754e-06}
+Probando: Dropout=0.2, Neurons=10, Batch_size=16, t=28, Model=RNN
+22/22 [==============================] - 0s 1ms/step
+Resultados: {&#39;RMSE&#39;: 0.1305321878977488, &#39;MAPE&#39;: 3568.5907068020356, &#39;R2&#39;: 0.9504220154678228, &#39;ljung-box&#39;: 4.325508188501391e-05, &#39;Jarque-bera&#39;: 2.6423307986078726e-14}
+Probando: Dropout=0.2, Neurons=10, Batch_size=32, t=7, Model=RNN
+6/6 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.12966407251704648, &#39;MAPE&#39;: 1543.2421739525573, &#39;R2&#39;: 0.9483706363121152, &#39;ljung-box&#39;: 0.09079927908233858, &#39;Jarque-bera&#39;: 0.0009118640245321386}
+Probando: Dropout=0.2, Neurons=10, Batch_size=32, t=14, Model=RNN
+11/11 [==============================] - 0s 1ms/step
+Resultados: {&#39;RMSE&#39;: 0.14225393317670618, &#39;MAPE&#39;: 1029.1150251847434, &#39;R2&#39;: 0.9377038653011152, &#39;ljung-box&#39;: 0.0005920141107075722, &#39;Jarque-bera&#39;: 8.761587511063595e-08}
+Probando: Dropout=0.2, Neurons=10, Batch_size=32, t=21, Model=RNN
+17/17 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.12451178489337944, &#39;MAPE&#39;: 374.0000630306116, &#39;R2&#39;: 0.9531488796710093, &#39;ljung-box&#39;: 0.00029221327366493516, &#39;Jarque-bera&#39;: 0.0}
+Probando: Dropout=0.2, Neurons=10, Batch_size=32, t=28, Model=RNN
+22/22 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.12847605398590992, &#39;MAPE&#39;: 1259.6191312069725, &#39;R2&#39;: 0.9519716119174763, &#39;ljung-box&#39;: 6.549758312281755e-06, &#39;Jarque-bera&#39;: 5.218048215738236e-15}
+Probando: Dropout=0.8, Neurons=10, Batch_size=16, t=7, Model=RNN
+6/6 [==============================] - 0s 0s/step
+Resultados: {&#39;RMSE&#39;: 0.22490279190276619, &#39;MAPE&#39;: 614.6424965028018, &#39;R2&#39;: 0.8446729299364143, &#39;ljung-box&#39;: 0.1430574027398084, &#39;Jarque-bera&#39;: 0.0004949874765737272}
+Probando: Dropout=0.8, Neurons=10, Batch_size=16, t=14, Model=RNN
+11/11 [==============================] - 0s 1ms/step
+Resultados: {&#39;RMSE&#39;: 0.2282758570710484, &#39;MAPE&#39;: 979.5395145445232, &#39;R2&#39;: 0.8395822211713477, &#39;ljung-box&#39;: 0.009573597207049044, &#39;Jarque-bera&#39;: 1.4680743798400897e-07}
+Probando: Dropout=0.8, Neurons=10, Batch_size=16, t=21, Model=RNN
+17/17 [==============================] - 0s 963us/step
+Resultados: {&#39;RMSE&#39;: 0.22625828533672548, &#39;MAPE&#39;: 955.7759496868559, &#39;R2&#39;: 0.8452936834880933, &#39;ljung-box&#39;: 1.6020306670166074e-05, &#39;Jarque-bera&#39;: 5.4056426002091484e-11}
+Probando: Dropout=0.8, Neurons=10, Batch_size=16, t=28, Model=RNN
+22/22 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.22013515538878356, &#39;MAPE&#39;: 549.5443585085125, &#39;R2&#39;: 0.8589956724236032, &#39;ljung-box&#39;: 1.4273575192216708e-07, &#39;Jarque-bera&#39;: 3.47499806707674e-14}
+Probando: Dropout=0.8, Neurons=10, Batch_size=32, t=7, Model=RNN
+6/6 [==============================] - 0s 0s/step
+Resultados: {&#39;RMSE&#39;: 0.2386522790551872, &#39;MAPE&#39;: 3560.0095530706453, &#39;R2&#39;: 0.8251004754141714, &#39;ljung-box&#39;: 0.1461242547751706, &#39;Jarque-bera&#39;: 0.00039519004310051287}
+Probando: Dropout=0.8, Neurons=10, Batch_size=32, t=14, Model=RNN
+11/11 [==============================] - 0s 6ms/step
+Resultados: {&#39;RMSE&#39;: 0.24504847682182695, &#39;MAPE&#39;: 1003.7645172467908, &#39;R2&#39;: 0.8151427238860631, &#39;ljung-box&#39;: 0.010025381978827401, &#39;Jarque-bera&#39;: 1.4599041797680457e-07}
+Probando: Dropout=0.8, Neurons=10, Batch_size=32, t=21, Model=RNN
+17/17 [==============================] - 0s 1ms/step
+Resultados: {&#39;RMSE&#39;: 0.24487336237718346, &#39;MAPE&#39;: 1422.2735848587859, &#39;R2&#39;: 0.8187900035001231, &#39;ljung-box&#39;: 1.508654451959705e-05, &#39;Jarque-bera&#39;: 8.072786883417393e-11}
+Probando: Dropout=0.8, Neurons=10, Batch_size=32, t=28, Model=RNN
+22/22 [==============================] - 0s 2ms/step
+Resultados: {&#39;RMSE&#39;: 0.23989350217107938, &#39;MAPE&#39;: 1085.2999435865922, &#39;R2&#39;: 0.8325478985369912, &#39;ljung-box&#39;: 1.5637437227842489e-07, &#39;Jarque-bera&#39;: 3.3739677718358507e-13}
+Mejores hiperparámetros: {&#39;Model&#39;: &#39;RNN&#39;, &#39;Dropout&#39;: 0.2, &#39;Neurons&#39;: 10, &#39;Batch_size&#39;: 16, &#39;t&#39;: 14, &#39;RMSE&#39;: 0.12167852929297392, &#39;MAPE&#39;: 4418.776552771231, &#39;R2&#39;: 0.9544214569711044, &#39;ljung-box&#39;: 0.0006169318470977173, &#39;Jarque-bera&#39;: 9.55735490748566e-12}
+Modelo seleccionado: {&#39;Model&#39;: &#39;MLP&#39;, &#39;Dropout&#39;: 0.2, &#39;Neurons&#39;: 10, &#39;Batch_size&#39;: 16, &#39;t&#39;: 28, &#39;RMSE&#39;: 0.048315184217587376, &#39;MAPE&#39;: 1699.9219645267963, &#39;R2&#39;: 0.9932076366134458, &#39;ljung-box&#39;: 1.701585850695102e-06, &#39;Jarque-bera&#39;: 7.771561172376096e-16}
+Modelo seleccionado: {&#39;Model&#39;: &#39;LSTM&#39;, &#39;Dropout&#39;: 0.2, &#39;Neurons&#39;: 10, &#39;Batch_size&#39;: 16, &#39;t&#39;: 28, &#39;RMSE&#39;: 0.052858315765487794, &#39;MAPE&#39;: 320.2646278386771, &#39;R2&#39;: 0.9918701922675677, &#39;ljung-box&#39;: 0.0015144745149682814, &#39;Jarque-bera&#39;: 0.0}
+Modelo seleccionado: {&#39;Model&#39;: &#39;RNN&#39;, &#39;Dropout&#39;: 0.2, &#39;Neurons&#39;: 10, &#39;Batch_size&#39;: 16, &#39;t&#39;: 14, &#39;RMSE&#39;: 0.12167852929297392, &#39;MAPE&#39;: 4418.776552771231, &#39;R2&#39;: 0.9544214569711044, &#39;ljung-box&#39;: 0.0006169318470977173, &#39;Jarque-bera&#39;: 9.55735490748566e-12}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># Resultados obtenidos de cada modelo (simula los valores reales)</span>
+<span class="n">resultados</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;Modelo&quot;</span><span class="p">:</span> <span class="s2">&quot;MLP&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;MAPE&quot;</span><span class="p">:</span> <span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;MAPE&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;RMSE&quot;</span><span class="p">:</span> <span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;RMSE&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;R^2&quot;</span><span class="p">:</span> <span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;R2&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;Ljung-Box p-value&quot;</span><span class="p">:</span> <span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;ljung-box&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;Jarque-Bera p-value&quot;</span><span class="p">:</span> <span class="n">best_params</span><span class="p">[</span><span class="s2">&quot;Jarque-bera&quot;</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;Modelo&quot;</span><span class="p">:</span> <span class="s2">&quot;LSTM&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;MAPE&quot;</span><span class="p">:</span> <span class="n">best_params_lstm</span><span class="p">[</span><span class="s2">&quot;MAPE&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;RMSE&quot;</span><span class="p">:</span> <span class="n">best_params_lstm</span><span class="p">[</span><span class="s2">&quot;RMSE&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;R^2&quot;</span><span class="p">:</span> <span class="n">best_params_lstm</span><span class="p">[</span><span class="s2">&quot;R2&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;Ljung-Box p-value&quot;</span><span class="p">:</span> <span class="n">best_params_lstm</span><span class="p">[</span><span class="s2">&quot;ljung-box&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;Jarque-Bera p-value&quot;</span><span class="p">:</span> <span class="n">best_params_lstm</span><span class="p">[</span><span class="s2">&quot;Jarque-bera&quot;</span><span class="p">],</span>
+    <span class="p">},</span>
+    <span class="p">{</span>
+        <span class="s2">&quot;Modelo&quot;</span><span class="p">:</span> <span class="s2">&quot;RNN&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;MAPE&quot;</span><span class="p">:</span> <span class="n">best_params_rnn</span><span class="p">[</span><span class="s2">&quot;MAPE&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;RMSE&quot;</span><span class="p">:</span> <span class="n">best_params_rnn</span><span class="p">[</span><span class="s2">&quot;RMSE&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;R^2&quot;</span><span class="p">:</span> <span class="n">best_params_rnn</span><span class="p">[</span><span class="s2">&quot;R2&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;Ljung-Box p-value&quot;</span><span class="p">:</span> <span class="n">best_params_rnn</span><span class="p">[</span><span class="s2">&quot;ljung-box&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;Jarque-Bera p-value&quot;</span><span class="p">:</span> <span class="n">best_params_rnn</span><span class="p">[</span><span class="s2">&quot;Jarque-bera&quot;</span><span class="p">],</span>
+    <span class="p">},</span>
+<span class="p">]</span>
+
+<span class="c1"># Crear un DataFrame con los resultados</span>
+<span class="n">df_resultados</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">resultados</span><span class="p">)</span>
+
+<span class="c1"># Mostrar la tabla</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_resultados</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  Modelo         MAPE      RMSE       R^2  Ljung-Box p-value  \
+0    MLP  1699.921965  0.048315  0.993208           0.000002   
+1   LSTM   320.264628  0.052858  0.991870           0.001514   
+2    RNN  4418.776553  0.121679  0.954421           0.000617   
+
+   Jarque-Bera p-value  
+0         7.771561e-16  
+1         0.000000e+00  
+2         9.557355e-12  
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="analisis-de-los-resultados">
+<h1><strong>Análisis de los resultados</strong><a class="headerlink" href="#analisis-de-los-resultados" title="Link to this heading">#</a></h1>
+<section id="evaluacion-general">
+<h2>1. <strong>Evaluación general</strong><a class="headerlink" href="#evaluacion-general" title="Link to this heading">#</a></h2>
+<p>A partir de las métricas presentadas, los modelos MLP, LSTM y RNN muestran diferencias significativas en su capacidad de predicción y comportamiento estadístico. Vamos a analizar cada métrica en detalle:</p>
+</section>
+<hr class="docutils" />
+<section id="mape-mean-absolute-percentage-error">
+<h2>2. <strong>MAPE (Mean Absolute Percentage Error)</strong><a class="headerlink" href="#mape-mean-absolute-percentage-error" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>MLP (1699.92):</strong> Este modelo presenta un MAPE muy alto, lo que indica un rendimiento deficiente en términos de error relativo. Es posible que el modelo no esté ajustándose bien a las características de los datos, o que existan valores extremos que afectan esta métrica.</p></li>
+<li><p><strong>LSTM (320.26):</strong> Este modelo tiene un MAPE mucho menor que el MLP, lo que sugiere que tiene un mejor ajuste a los datos y un menor error relativo. Esto es consistente con la naturaleza de los LSTM, que son buenos para capturar relaciones temporales complejas.</p></li>
+<li><p><strong>RNN (4418.78):</strong> El peor desempeño lo tiene el RNN, con un MAPE extremadamente alto, lo que indica que este modelo no logró generalizar ni capturar adecuadamente las relaciones en los datos.</p></li>
+</ul>
+<p><strong>Conclusión:</strong> En términos de MAPE, el modelo <strong>LSTM</strong> es claramente el mejor.</p>
+</section>
+<hr class="docutils" />
+<section id="rmse-root-mean-squared-error">
+<h2>3. <strong>RMSE (Root Mean Squared Error)</strong><a class="headerlink" href="#rmse-root-mean-squared-error" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>MLP (0.0483):</strong> Presenta un RMSE bajo, indicando que tiene un buen ajuste en términos absolutos.</p></li>
+<li><p><strong>LSTM (0.0529):</strong> Tiene un RMSE ligeramente superior al de MLP, aunque sigue siendo aceptable. Esto muestra que las predicciones del modelo están razonablemente cerca de los valores reales.</p></li>
+<li><p><strong>RNN (0.1217):</strong> El RNN tiene el peor RMSE, reflejando un ajuste deficiente y predicciones alejadas de los valores reales.</p></li>
+</ul>
+<p><strong>Conclusión:</strong> En términos de RMSE, el modelo <strong>MLP</strong> tiene el mejor desempeño, aunque el <strong>LSTM</strong> también es competitivo.</p>
+</section>
+<hr class="docutils" />
+<section id="r2-coeficiente-de-determinacion">
+<h2>4. <strong>R² (Coeficiente de determinación)</strong><a class="headerlink" href="#r2-coeficiente-de-determinacion" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>MLP (0.9932):</strong> Este modelo explica el 99.32% de la varianza en los datos, lo que lo convierte en un modelo altamente predictivo.</p></li>
+<li><p><strong>LSTM (0.9919):</strong> Aunque ligeramente inferior al MLP, sigue siendo un modelo muy confiable con el 99.19% de varianza explicada.</p></li>
+<li><p><strong>RNN (0.9544):</strong> Aunque su desempeño es peor que el de los otros dos modelos, un R² de 95.44% sigue siendo aceptable para muchas aplicaciones.</p></li>
+</ul>
+<p><strong>Conclusión:</strong> En términos de R², <strong>MLP</strong> es el modelo más explicativo, seguido de cerca por <strong>LSTM</strong>.</p>
+</section>
+<hr class="docutils" />
+<section id="ljung-box-p-value-independencia-de-errores">
+<h2>5. <strong>Ljung-Box p-value (Independencia de errores)</strong><a class="headerlink" href="#ljung-box-p-value-independencia-de-errores" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>MLP (0.000002):</strong> Un p-value extremadamente bajo indica que los residuos del modelo no son independientes, lo que sugiere que el modelo podría estar dejando patrones sin capturar.</p></li>
+<li><p><strong>LSTM (0.001514):</strong> Aunque su p-value es mejor que el de MLP, sigue siendo bajo, lo que indica cierta dependencia en los errores.</p></li>
+<li><p><strong>RNN (0.000617):</strong> Este modelo también muestra problemas de independencia en los errores.</p></li>
+</ul>
+<p><strong>Conclusión:</strong> Ninguno de los modelos logra capturar completamente la independencia de los errores, pero el <strong>LSTM</strong> es el que presenta el menor problema relativo.</p>
+</section>
+<hr class="docutils" />
+<section id="jarque-bera-p-value-normalidad-de-errores">
+<h2>6. <strong>Jarque-Bera p-value (Normalidad de errores)</strong><a class="headerlink" href="#jarque-bera-p-value-normalidad-de-errores" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>MLP (7.77e-16):</strong> El p-value extremadamente bajo indica que los residuos no son normales.</p></li>
+<li><p><strong>LSTM (0.0):</strong> También falla la prueba de normalidad de manera contundente.</p></li>
+<li><p><strong>RNN (9.56e-12):</strong> Aunque ligeramente mejor que los otros dos, tampoco cumple con la normalidad de los residuos.</p></li>
+</ul>
+<p><strong>Conclusión:</strong> Ningún modelo cumple con la normalidad de los errores, lo que podría ser un problema dependiendo de los supuestos requeridos en la tarea.</p>
+<hr class="docutils" />
+</section>
+</section>
+<section id="interpretacion-final-y-recomendaciones">
+<h1><strong>Interpretación final y recomendaciones</strong><a class="headerlink" href="#interpretacion-final-y-recomendaciones" title="Link to this heading">#</a></h1>
+<ol class="arabic simple">
+<li><p><strong>Mejor modelo: LSTM.</strong></p>
+<ul class="simple">
+<li><p>Aunque el MLP tiene un RMSE y R² ligeramente mejores, el LSTM sobresale por su menor MAPE, lo que sugiere un mejor ajuste en términos relativos.</p></li>
+<li><p>Además, su p-value en la prueba de Ljung-Box es el menos problemático.</p></li>
+</ul>
+</li>
+<li><p><strong>Rendimiento del RNN:</strong></p>
+<ul class="simple">
+<li><p>El modelo RNN muestra el peor desempeño en todas las métricas, lo que sugiere que no es adecuado para este problema.</p></li>
+</ul>
+</li>
+<li><p><strong>Conclusión general:</strong></p>
+<ul class="simple">
+<li><p>En términos de robustez y desempeño, el <strong>LSTM</strong> es el modelo más prometedor para este conjunto de datos, pero hay margen de mejora para garantizar la independencia y normalidad de los errores.</p></li>
+</ul>
+</li>
+</ol>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">visualize_training_validation</span><span class="p">(</span><span class="n">total_points</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">window_sizes</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">21</span><span class="p">,</span> <span class="mi">28</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Visualiza la simulación de las divisiones de entrenamiento y validación para diferentes tamaños de ventana.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        total_points (int): Número total de puntos de datos.</span>
+<span class="sd">        stride (int): Paso entre las ventanas de entrenamiento.</span>
+<span class="sd">        window_sizes (list): Lista de tamaños de ventana a visualizar.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">window</span> <span class="ow">in</span> <span class="n">window_sizes</span><span class="p">:</span>
+        <span class="n">train_window</span> <span class="o">=</span> <span class="n">window</span>
+        <span class="n">val_window</span> <span class="o">=</span> <span class="n">window</span>
+
+        <span class="n">train_positions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">val_positions</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1"># Construir posiciones de ventanas deslizantes</span>
+        <span class="k">for</span> <span class="n">start</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">total_points</span> <span class="o">-</span> <span class="n">train_window</span> <span class="o">-</span> <span class="n">val_window</span><span class="p">,</span> <span class="n">stride</span><span class="p">):</span>
+            <span class="n">train_positions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">start</span> <span class="o">+</span> <span class="n">train_window</span><span class="p">))</span>
+            <span class="n">val_positions</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">start</span> <span class="o">+</span> <span class="n">train_window</span><span class="p">,</span> <span class="n">start</span> <span class="o">+</span> <span class="n">train_window</span> <span class="o">+</span> <span class="n">val_window</span><span class="p">))</span>
+
+        <span class="c1"># Visualización de las ventanas</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">train_positions</span><span class="p">,</span> <span class="n">val_positions</span><span class="p">)):</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">train</span><span class="p">),</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;r-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Entrenamiento&#39;</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">val</span><span class="p">),</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Validación&#39;</span> <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+        <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Simulación para ventana de tamaño </span><span class="si">{</span><span class="n">window</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span> <span class="n">weight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Índice de los datos&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Iteración&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">total_points</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">yticks</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_positions</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s1">&#39;--&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+
+<span class="c1"># Visualización con configuración predeterminada</span>
+<span class="c1"># visualize_training_validation()</span>
+
+<span class="c1"># Configuración personalizada</span>
+<span class="n">visualize_training_validation</span><span class="p">(</span><span class="n">total_points</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">stride</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">window_sizes</span><span class="o">=</span><span class="p">[</span><span class="mi">7</span><span class="p">,</span><span class="mi">14</span><span class="p">,</span><span class="mi">21</span><span class="p">,</span><span class="mi">28</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/3a5bcd82cb2958d0f400399687f38be682c10c1fca1a9bdf43da12fbc10fa045.png" src="_images/3a5bcd82cb2958d0f400399687f38be682c10c1fca1a9bdf43da12fbc10fa045.png" />
+<img alt="_images/b0455a943e70e6bccbfa74eac97c89f0bd82c9b18f3e5cb7b5a4310dbe246433.png" src="_images/b0455a943e70e6bccbfa74eac97c89f0bd82c9b18f3e5cb7b5a4310dbe246433.png" />
+<img alt="_images/392f16d2f41eb0a092545b0abab4bf250b4c27a27516eb555b8db8dc82fb3c0c.png" src="_images/392f16d2f41eb0a092545b0abab4bf250b4c27a27516eb555b8db8dc82fb3c0c.png" />
+<img alt="_images/57769515ad8ef0160444c3ca1a776fda6b4fa7ebb3d017c3573dc3c5e0646b2a.png" src="_images/57769515ad8ef0160444c3ca1a776fda6b4fa7ebb3d017c3573dc3c5e0646b2a.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sujeto</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">ejercicio</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">t_window</span> <span class="o">=</span> <span class="mi">7</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">return_of_df</span><span class="p">(</span><span class="n">sujeto</span><span class="p">,</span> <span class="n">ejercicio</span><span class="p">,</span> <span class="n">t_window</span><span class="p">)</span>
+
+<span class="n">y_train</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">y_train</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">y_test</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">go</span><span class="o">.</span><span class="n">Figure</span><span class="p">()</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">y_train</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Train&#39;</span><span class="p">,</span>
+    <span class="n">marker_color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span>
+    <span class="n">boxmean</span><span class="o">=</span><span class="kc">True</span> 
+<span class="p">))</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span><span class="n">go</span><span class="o">.</span><span class="n">Box</span><span class="p">(</span>
+    <span class="n">y</span><span class="o">=</span><span class="n">y_test</span><span class="p">,</span>
+    <span class="n">name</span><span class="o">=</span><span class="s1">&#39;Test&#39;</span><span class="p">,</span>
+    <span class="n">marker_color</span><span class="o">=</span><span class="s1">&#39;orange&#39;</span><span class="p">,</span>
+    <span class="n">boxmean</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">))</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+    <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Distribución de Valores para Train y Test (Valores Positivos)&#39;</span><span class="p">,</span>
+    <span class="n">xaxis_title</span><span class="o">=</span><span class="s1">&#39;Conjunto de Datos&#39;</span><span class="p">,</span>
+    <span class="n">yaxis_title</span><span class="o">=</span><span class="s1">&#39;Valores&#39;</span><span class="p">,</span>
+    <span class="n">template</span><span class="o">=</span><span class="s1">&#39;plotly_white&#39;</span><span class="p">,</span>
+    <span class="n">boxmode</span><span class="o">=</span><span class="s1">&#39;group&#39;</span> 
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="EDA.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">&lt;no title&gt;</p>
+      </div>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#"><strong>1. Medianas de Errores</strong></a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#observaciones-de-las-graficas"><strong>2. Observaciones de las Gráficas</strong></a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-de-los-resultados"><strong>Análisis de los resultados</strong></a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluacion-general">1. <strong>Evaluación general</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mape-mean-absolute-percentage-error">2. <strong>MAPE (Mean Absolute Percentage Error)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rmse-root-mean-squared-error">3. <strong>RMSE (Root Mean Squared Error)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#r2-coeficiente-de-determinacion">4. <strong>R² (Coeficiente de determinación)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ljung-box-p-value-independencia-de-errores">5. <strong>Ljung-Box p-value (Independencia de errores)</strong></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#jarque-bera-p-value-normalidad-de-errores">6. <strong>Jarque-Bera p-value (Normalidad de errores)</strong></a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretacion-final-y-recomendaciones"><strong>Interpretación final y recomendaciones</strong></a></li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Juan Albis
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
